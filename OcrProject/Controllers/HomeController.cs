@@ -1,16 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OcrProject.Services.Abstract;
 
 namespace OcrProject.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/home")]
     [ApiController]
     public class HomeController : ControllerBase
     {
+        readonly IOCRService _ocrService;
 
-        [HttpPost("DocumentAnalysis")]
+        public HomeController(IOCRService ocrService)
+        {
+            _ocrService = ocrService;
+        }
+
+        [HttpPost("documentanalysis")]
         public async Task<IActionResult> DocumentAnalysis(IFormFile formFile)
         {
-            return Ok(formFile);
+            var insured = await _ocrService.OcrWithAzure(formFile,new CancellationToken());
+            return Ok(insured);
         }
     }
 }

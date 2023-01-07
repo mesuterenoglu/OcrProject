@@ -10,4 +10,5 @@ public class SQLContext : DbContext
 
 	}
 	public DbSet<Insured> Insureds { get; set; }
+	public DbSet<AzureOCRResult> AzureOCRResults { get; set; }
 }

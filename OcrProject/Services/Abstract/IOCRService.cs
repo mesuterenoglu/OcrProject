@@ -1,8 +1,9 @@
-﻿using OcrProject.Models;
+﻿using Azure.AI.FormRecognizer.DocumentAnalysis;
+using OcrProject.Models;
 
 namespace OcrProject.Services.Abstract;
 
 public interface IOCRService
 {
-    Task<Insured> OcrWithAzure(IFormFile file); 
+    Task<IEnumerable<AzureOCRResult>> OcrWithAzure(IFormFile file,CancellationToken cancellationToken);
 }
