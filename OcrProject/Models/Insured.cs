@@ -13,18 +13,4 @@ public class Insured
     public string AddressLine { get; set; }
     public string City { get; set; }
     public string ZipCode { get; set; }
-    public Insured()
-    {
-
-    }
-    public Insured(string firstName, string lastName, string phone, string email, string addressLine, string city, string zipCode)
-    {
-        FirstName = firstName;
-        LastName = lastName;
-        Phone = phone;
-        Email = email;
-        AddressLine = addressLine;
-        City = city;
-        ZipCode = zipCode;
-    }
 }
