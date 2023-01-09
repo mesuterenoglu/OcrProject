@@ -13,9 +13,20 @@ namespace OcrProject.Services.Concrete
             _context = context;
         }
 
-        public Task<IEnumerable<Insured>> AddInsuredsByOcr(IEnumerable<AzureOCRResult> azureOCRResults)
+        public async Task<Insured> CreateInsuredsByOcr(IEnumerable<AzureOCRResult> azureOCRResults, CancellationToken cancellationToken = default)
         {
-            var insured = new Insured;
+            var insured = new Insured();
+            insured.FirstName = azureOCRResults.FirstOrDefault(x => x.Field == "FirstName").Content;
+            insured.LastName = azureOCRResults.FirstOrDefault(x => x.Field == "LastName").Content;
+            insured.Phone = azureOCRResults.FirstOrDefault(x => x.Field == "Phone").Content;
+            insured.Email = azureOCRResults.FirstOrDefault(x => x.Field == "Email").Content;
+            insured.AddressLine = azureOCRResults.FirstOrDefault(x => x.Field == "Address").Content;
+            insured.City = azureOCRResults.FirstOrDefault(x => x.Field == "City").Content;
+            insured.ZipCode = azureOCRResults.FirstOrDefault(x => x.Field == "ZipCode").Content;
+
+            _context.Insureds.Add(insured);
+            await _context.SaveChangesAsync(cancellationToken);
+            return insured;
         }
     }
 }

@@ -19,35 +19,28 @@ namespace OcrProject.Services.Concrete
             _azureSettings = options.Value;
         }
 
-        public async Task<IEnumerable<AzureOCRResult>> OcrWithAzure(IFormFile file, CancellationToken cancellationToken)
+        public async Task<IEnumerable<AzureOCRResult>> OcrWithAzure(IFormFile file, CancellationToken cancellationToken = default)
         {
-            try
-            {
-                var credential = new AzureKeyCredential(_azureSettings.ApiKey);
-                var client = new DocumentAnalysisClient(new Uri(_azureSettings.Endpoint), credential);
+            var credential = new AzureKeyCredential(_azureSettings.ApiKey);
+            var client = new DocumentAnalysisClient(new Uri(_azureSettings.Endpoint), credential);
 
-                var doc = await file.GetBytes(cancellationToken);
-                var operation = await client.AnalyzeDocumentAsync(WaitUntil.Completed, _azureSettings.ModelName, new MemoryStream(doc));
+            var doc = await file.GetBytes(cancellationToken);
+            var operation = await client.AnalyzeDocumentAsync(WaitUntil.Completed, _azureSettings.ModelName, new MemoryStream(doc));
 
 
-                var results = operation.Value.Documents.SelectMany(doc => doc.Fields);
-                var azureOcrResults = results
-                                    .Select(field =>
-                                                new AzureOCRResult(
-                                                    field.Key,
-                                                    field.Value.Content,
-                                                    field.Value.FieldType.ToString(),
-                                                    field.Value.Confidence * 100,
-                                                    field.Value.BoundingRegions.Select(x => x.PageNumber).FirstOrDefault(),
-                                                    field.Value.BoundingRegions.Select(x => x.BoundingPolygon.ToString()).FirstOrDefault()));
-                _context.AzureOCRResults.AddRange(azureOcrResults);
-                await _context.SaveChangesAsync(cancellationToken);
-                return azureOcrResults;
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException(ex.Message);
-            }
+            var results = operation.Value.Documents.SelectMany(doc => doc.Fields);
+            var azureOcrResults = results
+                                .Select(field =>
+                                            new AzureOCRResult(
+                                                field.Key,
+                                                field.Value.Content,
+                                                field.Value.FieldType.ToString(),
+                                                field.Value.Confidence * 100,
+                                                field.Value.BoundingRegions.Select(x => x.PageNumber).FirstOrDefault(),
+                                                field.Value.BoundingRegions.Select(x => x.BoundingPolygon.ToString()).FirstOrDefault()));
+            _context.AzureOCRResults.AddRange(azureOcrResults);
+            await _context.SaveChangesAsync(cancellationToken);
+            return azureOcrResults;
         }
     }
 }

@@ -17,6 +17,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<SQLContext>(x => x.UseSqlite("DataSource = ..\\OcrProject\\DataAccess\\Data\\app.db"));
 builder.Services.AddScoped<IOCRService, OCRService>();
+builder.Services.AddScoped<IInsuredService, InsuredService>();
 
 var app = builder.Build();
 

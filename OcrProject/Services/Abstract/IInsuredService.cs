@@ -4,6 +4,6 @@ namespace OcrProject.Services.Abstract
 {
     public interface IInsuredService
     {
-        Task<IEnumerable<Insured>> AddInsuredsByOcr(IEnumerable<AzureOCRResult> azureOCRResults);
+        Task<Insured> CreateInsuredsByOcr(IEnumerable<AzureOCRResult> azureOCRResults,CancellationToken cancellationToken = default);
     }
 }
