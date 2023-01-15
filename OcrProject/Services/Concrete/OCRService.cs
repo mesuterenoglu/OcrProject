@@ -25,7 +25,7 @@ namespace OcrProject.Services.Concrete
             var client = new DocumentAnalysisClient(new Uri(_azureSettings.Endpoint), credential);
 
             var doc = await file.GetBytes(cancellationToken);
-            var operation = await client.AnalyzeDocumentAsync(WaitUntil.Completed, _azureSettings.ModelName, new MemoryStream(doc));
+            var operation = await client.AnalyzeDocumentAsync(WaitUntil.Completed, _azureSettings.ModelName, new MemoryStream(doc), cancellationToken: cancellationToken);
 
 
             var results = operation.Value.Documents.SelectMany(doc => doc.Fields);
@@ -37,7 +37,7 @@ namespace OcrProject.Services.Concrete
                                                 field.Value.FieldType.ToString(),
                                                 field.Value.Confidence * 100,
                                                 field.Value.BoundingRegions.Select(x => x.PageNumber).FirstOrDefault(),
-                                                field.Value.BoundingRegions.Select(x => x.BoundingPolygon.ToString()).FirstOrDefault()));
+                                                field.Value.BoundingRegions.Select(x => x.BoundingPolygon.First().ToString()).FirstOrDefault()));
             _context.AzureOCRResults.AddRange(azureOcrResults);
             await _context.SaveChangesAsync(cancellationToken);
             return azureOcrResults;
