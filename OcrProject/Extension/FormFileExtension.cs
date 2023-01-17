@@ -2,7 +2,7 @@
 
 public static class FormFileExtensions
 {
-    public static async Task<byte[]> GetBytes(this IFormFile formFile,CancellationToken cancellationToken)
+    public static async Task<byte[]> GetBytesAsync(this IFormFile formFile,CancellationToken cancellationToken)
     {
         var ms = new MemoryStream();
         await formFile.CopyToAsync(ms,cancellationToken);

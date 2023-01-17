@@ -19,12 +19,12 @@ namespace OcrProject.Services.Concrete
             _azureSettings = options.Value;
         }
 
-        public async Task<IEnumerable<AzureOCRResult>> OcrWithAzure(IFormFile file, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<AzureOCRResult>> OcrWithAzureAsync(IFormFile file, CancellationToken cancellationToken = default)
         {
             var credential = new AzureKeyCredential(_azureSettings.ApiKey);
             var client = new DocumentAnalysisClient(new Uri(_azureSettings.Endpoint), credential);
 
-            var doc = await file.GetBytes(cancellationToken);
+            var doc = await file.GetBytesAsync(cancellationToken);
             var operation = await client.AnalyzeDocumentAsync(WaitUntil.Completed, _azureSettings.ModelName, new MemoryStream(doc), cancellationToken: cancellationToken);
 
 
@@ -37,7 +37,7 @@ namespace OcrProject.Services.Concrete
                                                 field.Value.FieldType.ToString(),
                                                 field.Value.Confidence * 100,
                                                 field.Value.BoundingRegions.Select(x => x.PageNumber).FirstOrDefault(),
-                                                field.Value.BoundingRegions.Select(x => x.BoundingPolygon.First().ToString()).FirstOrDefault()));
+                                                string.Join(',', field.Value.BoundingRegions.Select(x => x.BoundingPolygon).FirstOrDefault())));
             _context.AzureOCRResults.AddRange(azureOcrResults);
             await _context.SaveChangesAsync(cancellationToken);
             return azureOcrResults;

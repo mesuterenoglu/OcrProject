@@ -20,8 +20,8 @@ namespace OcrProject.Controllers
         public async Task<IActionResult> DocumentAnalysis(IFormFile formFile)
         {
             var cancellationToken = new CancellationToken();
-            var ocrResults = await _ocrService.OcrWithAzure(formFile,cancellationToken);
-            var insured = await _insuredService.CreateInsuredsByOcr(ocrResults,cancellationToken);
+            var ocrResults = await _ocrService.OcrWithAzureAsync(formFile,cancellationToken);
+            var insured = await _insuredService.CreateInsuredsByOcrAsync(ocrResults,cancellationToken);
             return Ok(insured);
         }
     }

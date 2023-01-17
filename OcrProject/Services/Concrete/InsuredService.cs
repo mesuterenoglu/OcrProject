@@ -13,7 +13,7 @@ namespace OcrProject.Services.Concrete
             _context = context;
         }
 
-        public async Task<Insured> CreateInsuredsByOcr(IEnumerable<AzureOCRResult> azureOCRResults, CancellationToken cancellationToken = default)
+        public async Task<Insured> CreateInsuredsByOcrAsync(IEnumerable<AzureOCRResult> azureOCRResults, CancellationToken cancellationToken = default)
         {
             var insured = new Insured();
             insured.FirstName = azureOCRResults.FirstOrDefault(x => x.Field == "FirstName").Content;
