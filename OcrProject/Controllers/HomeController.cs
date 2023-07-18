@@ -19,9 +19,8 @@ namespace OcrProject.Controllers
         [HttpPost("documentanalysis")]
         public async Task<IActionResult> DocumentAnalysis(IFormFile formFile)
         {
-            var cancellationToken = new CancellationToken();
-            var ocrResults = await _ocrService.OcrWithAzureAsync(formFile,cancellationToken);
-            var insured = await _insuredService.CreateInsuredsByOcrAsync(ocrResults,cancellationToken);
+            var ocrResults = await _ocrService.OcrWithAzureAsync(formFile);
+            var insured = await _insuredService.CreateInsuredsByOcrAsync(ocrResults);
             return Ok(insured);
         }
     }
