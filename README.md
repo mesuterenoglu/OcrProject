@@ -1,0 +1,1 @@
+- It is an example project that shows how to use Azure Form Recognizer for OCR purposes
